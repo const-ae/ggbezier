@@ -1,0 +1,18 @@
+Package: ggbezier
+Type: Package
+Title: Bezier curves for 'ggplot2'
+Version: 0.1.0
+Authors@R: person("Constantin", "Ahlmann-Eltze", email = "artjom31415@googlemail.com", 
+                  role = c("aut", "cre"), comment = c(ORCID = "0000-0002-3762-068X"))
+Description: Bezier curves provide an interpretable parametric tool to draw
+  2-dimensional curves. Each curve is parameterized by control points and the tangent
+  at those control points.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Imports: 
+    ggplot2,
+    rlang,
+Recommends:
+    dplyr
+RoxygenNote: 7.3.1

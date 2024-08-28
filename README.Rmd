@@ -1,0 +1,106 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# ggbezier
+
+<!-- badges: start -->
+<!-- badges: end -->
+
+`ggbezier` makes it easy to work with [Bezier curves](https://en.wikipedia.org/wiki/B%C3%A9zier_curve) in `ggplot2.
+
+## Installation
+
+You can install the development version of ggbezier from Github:
+
+``` r
+devtools::install_github("const-ae/ggbezier")
+```
+
+## Example
+
+This is a basic example which shows you how to solve a common problem:
+
+```{r example}
+library(ggplot2)
+library(ggbezier)
+
+# Only recommended, but not required
+library(dplyr)
+```
+
+
+Bezier curves are useful for drawing wavy things.
+
+```{r}
+wave_data <- data.frame(
+  x = seq(1, 12, by = 2),
+  y = rep(c(0.5, -0.5), times = 3)
+)
+
+ggplot(wave_data, aes(x = x, y = y)) +
+    geom_bezier()
+```
+
+The shape is controlled by _control points_ of handles. Set `draw_handles = TRUE` to see them.
+
+```{r}
+ggplot(wave_data, aes(x = x, y = y)) +
+    geom_bezier(show_handles = TRUE)
+```
+
+You can change the handles by setting
+
+* their `angle` and `handle_length`, or
+* the position of the next end point (`x_handle` and `y_handle`), or
+* the position of the left and right handle (`x_handle1`, `y_handle1`, `x_handle2`, and `y_handle2`).
+
+```{r}
+ggplot(wave_data, aes(x = x, y = y)) +
+    geom_bezier(show_handles = TRUE, angle = 20)
+```
+
+Data with randomized handle positions:
+
+```{r}
+wave_data %>%
+  mutate(x_handle1 = x + rnorm(n(), sd = 0.4),
+         x_handle2 = x + rnorm(n(), sd = 0.4),
+         y_handle1 = y + rnorm(n(), sd = 0.4),
+         y_handle2 = y + rnorm(n(), sd = 0.4)) %>%
+  ggplot(aes(x = x, y = y, x_handle1 = x_handle1, x_handle2 = x_handle2, y_handle1 = y_handle1, y_handle2 = y_handle2)) +
+    geom_bezier(show_handles = TRUE, show_curve = FALSE, color = "green") +
+    geom_bezier(show_handles = FALSE, show_curve = TRUE, color = "black") +
+    lims(y = c(-1, 1))
+```
+
+
+Bezier curves are also useful for drawing pretty arrows and annotating datapoints:
+
+```{r}
+ggplot(mtcars, aes(x = cyl, y = mpg)) +
+    geom_point() +
+    geom_bezier(data = data.frame(x = c(6.05, 6.5), y = c(19.7, 15), angle = c(0, -90), handle_length = c(0.4, 5)),
+                aes(x = x, y = y, angle = angle, handle_length = handle_length),
+                arrow = arrow(type = "closed", ends = "first")) +
+    annotate("text", x = 6.5, y = 15, hjust = 0.5, vjust = 1.1, label = "Ferrari Dino")
+```
+
+
+
+```{r}
+sessionInfo()
+```
+
+
